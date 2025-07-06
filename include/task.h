@@ -1,6 +1,7 @@
 #ifndef TASK_H
 #define TASK_H
 
+#include "common.h"
 #include <cstdint>
 #include <string>
 
@@ -8,8 +9,6 @@
 #define RUNNING   1
 #define READY     2
 #define SUSPENDED 3
-
-typedef void (*taskFunction_t)(void* args );
 
 class Task {
   public:
@@ -20,11 +19,12 @@ class Task {
     void setState(uint8_t state); 
     uint8_t getPriority() const;
     uint8_t getState() const;
+    std::string getName() const;
     void executeTask(); 
 
   private:
     std::string name_; // for debugging purposes
-    uint8_t priority_; // ranges from 0 to MAX_PRIORITY defined elsewhere
+    uint8_t priority_; // ranges from 0 to configMAX_PRIORITY (see config.h)
     uint8_t state_; // blocked, running, ready or suspended
     uint8_t* stackBase_; // base of the stack 
     uint8_t* stackPtr_; // simulated stack pointer 
@@ -32,13 +32,5 @@ class Task {
     taskFunction_t funcPtr_; // code that the task executes when given cpu time
     void* funcArgs_; // arguments to be passed into the task function
 };
-
-// custom comparator used in priority queue (max heap) creation, see rtos.h and rtos.cpp.
-struct TaskComparator {
-  bool operator()(const Task* first, const Task* second) const {
-    return first->getPriority() < second->getPriority();
-  }
-};
-
 
 #endif // TASK_H

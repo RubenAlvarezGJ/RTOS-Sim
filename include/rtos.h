@@ -1,18 +1,18 @@
 #ifndef RTOS_H
 #define RTOS_H
 
-#include "task.h"
-#include "scheduler.h"
+#include "config.h"
+#include "common.h"
 #include <vector>
 #include <iostream>
 
-constexpr std::size_t STACK_SIZE = 256; // 256 byte stack by default, change at your own risk
-constexpr std::size_t MAX_RAM_SIZE = 16382; // maximum allowed simulated RAM size (16 KB), change at your own risk
+class Task;
+class Scheduler;
 
 class RTOS {
   public:
     RTOS(size_t memorySize) : memorySize_(memorySize), nextFree_(0) {
-      if (memorySize_ > MAX_RAM_SIZE) {
+      if (memorySize_ > configMAX_RAM_SIZE) {
         std::cerr << "Requested memory size exceeds maximum RAM available\n";
       }
       memoryPool_ = new uint8_t[memorySize_];
@@ -21,9 +21,9 @@ class RTOS {
     void startScheduler();
 
   private:
-    void updateNextFree() {nextFree_ += STACK_SIZE;}
+    void updateNextFree() {nextFree_ += configSTACK_SIZE;}
   
-    Scheduler scheduler_;
+    Scheduler* scheduler_;
     uint8_t* memoryPool_; // simulated system RAM
     size_t memorySize_; // size of memoryPool
     size_t nextFree_; // pointer to offset into the memory pool

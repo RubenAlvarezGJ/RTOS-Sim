@@ -1,19 +1,25 @@
 #ifndef SCHEDUELR_H
 #define SCHEDULER_H
 
-#include "task.h"
+#include "config.h"
+#include "clock.h"
 #include <vector>
-#include <queue>
+
+class Task;
 
 class Scheduler {
   public:
-    void addToReadyList(Task* task);
+    Scheduler() = default;
     void run();
-  
+    void addToReadyList(Task* task);
 
   private:
-    std::priority_queue<Task*, std::vector<Task*>, TaskComparator> taskList_; // stores pointers to Task objects. Task with highest priority stored at front of the queue.
+    Task *idleTask_ = nullptr; // runs when no ready tasks are available
+    Clock clock_;
+    std::vector<Task*> readyLists_[configMAX_PRIORITY]; // ready list for each priortiy level
 
+    void initializeIdleTask();
+    Task* getHighestPriorityTask();
 };
 
 #endif
