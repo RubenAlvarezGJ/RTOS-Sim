@@ -14,7 +14,7 @@ class Scheduler {
     void addToReadyList(Task* task);
 
   private:
-    Task *idleTask_ = nullptr; // runs when no ready tasks are available
+    Task* idleTask_ = nullptr; // runs when no ready tasks are available
     Clock clock_;
     std::vector<Task*> readyLists_[configMAX_PRIORITY]; // ready list for each priortiy level
 

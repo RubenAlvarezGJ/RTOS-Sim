@@ -17,7 +17,7 @@ class RTOS {
       }
       memoryPool_ = new uint8_t[memorySize_];
     }
-    void createTask(std::string name, uint8_t priority, taskFunction_t taskCode, void* args); // creates a new task and adds it to the scheduler
+    void createTask(const std::string& name, uint8_t priority, taskFunction_t taskCode, void* args); // creates a new task and adds it to the scheduler
     void startScheduler();
 
   private:

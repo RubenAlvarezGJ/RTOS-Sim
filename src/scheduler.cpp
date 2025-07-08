@@ -23,6 +23,7 @@ void Scheduler::initializeIdleTask() {
     }
 }
 
+// TODO: most chosen task to the end to allow for round-robin scheduling
 Task* Scheduler::getHighestPriorityTask() {
   int priority = static_cast<int>(configMAX_PRIORITY) - 1;
 

@@ -5,14 +5,9 @@
 #include <cstdint>
 #include <string>
 
-#define BLOCKED   0
-#define RUNNING   1
-#define READY     2
-#define SUSPENDED 3
-
 class Task {
   public:
-    Task(std::string name, uint8_t priority, uint8_t* stackBase, uint8_t* stackPtr, taskFunction_t taskCode, void* args)
+    Task(const std::string& name, uint8_t priority, uint8_t* stackBase, uint8_t* stackPtr, taskFunction_t taskCode, void* args)
         : name_(name), priority_(priority), stackBase_(stackBase), stackPtr_(stackPtr), funcPtr_(taskCode), funcArgs_(args),
           state_(READY) {}
     void setPriority(uint8_t priority);
@@ -21,6 +16,11 @@ class Task {
     uint8_t getState() const;
     std::string getName() const;
     void executeTask(); 
+
+    static constexpr uint8_t BLOCKED   = 0;
+    static constexpr uint8_t RUNNING   = 1;
+    static constexpr uint8_t READY     = 2;
+    static constexpr uint8_t SUSPENDED = 3;
 
   private:
     std::string name_; // for debugging purposes

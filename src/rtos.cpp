@@ -2,7 +2,7 @@
 #include "task.h"
 #include "scheduler.h"
 
-void RTOS::createTask(std::string name, uint8_t priority, taskFunction_t taskCode, void* args) {
+void RTOS::createTask(const std::string& name, uint8_t priority, taskFunction_t taskCode, void* args) {
   if ( (nextFree_ + configSTACK_SIZE) > memorySize_) {
     std::cerr << "Insufficient memory available for task creation\n";
   }
