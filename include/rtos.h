@@ -11,13 +11,9 @@ class Scheduler;
 
 class RTOS {
   public:
-    RTOS(size_t memorySize) : memorySize_(memorySize), nextFree_(0) {
-      if (memorySize_ > configMAX_RAM_SIZE) {
-        std::cerr << "Requested memory size exceeds maximum RAM available\n";
-      }
-      memoryPool_ = new uint8_t[memorySize_];
-    }
-    void createTask(const std::string& name, uint8_t priority, taskFunction_t taskCode, void* args); // creates a new task and adds it to the scheduler
+    RTOS(size_t memorySize);
+    ~RTOS();
+    void createTask(const std::string& name, uint8_t priority, taskFunction_t taskCode); // creates a new task and adds it to the scheduler
     void startScheduler();
 
   private:

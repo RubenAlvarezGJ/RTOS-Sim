@@ -10,13 +10,14 @@ class Task;
 class Scheduler {
   public:
     Scheduler() = default;
-    void run();
     void addToReadyList(Task* task);
-
+    void removeTask(Task* task);
+    void run();
+    
   private:
     Task* idleTask_ = nullptr; // runs when no ready tasks are available
     Clock clock_;
-    std::vector<Task*> readyLists_[configMAX_PRIORITY]; // ready list for each priortiy level
+    std::vector<Task*> readyLists_[configMAX_PRIORITY]; // ready lists for each priortiy level
 
     void initializeIdleTask();
     Task* getHighestPriorityTask();

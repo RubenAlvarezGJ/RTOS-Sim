@@ -23,13 +23,14 @@ uint8_t Task::getPriority() const {
 uint8_t Task::getState() const {
   return this->state_;
 }
-
 std::string Task::getName() const {
   return this->name_;
 }
 
+std::size_t* Task::getStep() {
+  return &taskStep_;
+}
+
 void Task::executeTask() {
-  if (funcPtr_ != nullptr) {
-    funcPtr_(funcArgs_);
-  }
+  if (funcPtr_) funcPtr_(this); 
 }
