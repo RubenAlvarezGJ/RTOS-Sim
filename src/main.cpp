@@ -1,5 +1,6 @@
 #include "rtos.h"
 #include "task.h"
+#include "context.h"
 #include <iostream>
 
 
@@ -8,22 +9,57 @@
   This is what all functions that are passed to tasks should look like for this simulator
 */
 void exampleTask(void* args) {
-  Task* task = static_cast<Task*>(args);
-  std::size_t* step = task->getStep();
-  std::cout << "'" << task->getName() << "' executing step " << static_cast<int>(*step) << "\n";
-  (*step)++;
+  TaskContext* ctx = static_cast<TaskContext*>(args);
+  std::size_t step = ctx->task->getStep();
+  std::cout << "'" << ctx->task->getName() << "' executing step " << static_cast<int>(step) << "\n";
+}
+
+void dynamicTask(void* args) {
+  TaskContext* ctx = static_cast<TaskContext*>(args);
+  std::size_t step = ctx->task->getStep();
+  std::cout << "'" << ctx->task->getName() << "' executing step " << static_cast<int>(step) << "\n";
+}
+
+void exampleTaskD(void* args) {
+  TaskContext *ctx = static_cast<TaskContext*>(args);
+  std::size_t step = ctx->task->getStep();
+  std::cout << "'" << ctx->task->getName() << "' executing step " << static_cast<int>(step) << "\n";
+  if (step == 0) {
+    ctx->rtos->createTask("DynamicallyCreatedTask", 3, dynamicTask);
+  }
 }
 
 int main() {
-  RTOS rtos(1000); // initialize the simulator with 1000 "bytes" of RAM
+  bool standard = true;
 
-  rtos.createTask("TaskA", 1, exampleTask);
-  rtos.createTask("TaskB", 1, exampleTask);
-  rtos.createTask("TaskC", 2, exampleTask);
-  rtos.createTask("TaskD", 3, exampleTask);
-  rtos.createTask("TaskE", 4, exampleTask);
+  if (standard) {
+    // standard 
+    RTOS rtos1(5000); 
 
-  rtos.startScheduler();
+    rtos1.createTask("TaskZ", 5, exampleTask);
+    rtos1.createTask("TaskA", 1, exampleTask);
+    rtos1.createTask("TaskB", 1, exampleTask);
+    rtos1.createTask("TaskC", 2, exampleTask);
+    rtos1.createTask("TaskD", 3, exampleTask);
+    rtos1.createTask("TaskE", 4, exampleTask);
+    rtos1.createTask("TaskF", 1, exampleTask);
+
+    rtos1.startScheduler();
+  }
+
+  else {
+    // with dynamic scheduling
+    RTOS rtos2(10000);
+
+    rtos2.createTask("TaskA", 3, exampleTaskD);
+    rtos2.createTask("TaskB", 3, exampleTask);
+    rtos2.createTask("TaskC", 3, exampleTask);
+    rtos2.createTask("TaskD", 2, exampleTask);
+    rtos2.createTask("TaskE", 1, exampleTask);
+
+
+    rtos2.startScheduler();
+  }
 
   return 0;
 }

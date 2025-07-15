@@ -2,6 +2,22 @@
 #include "config.h"
 #include <iostream>
 
+uint8_t Task::getPriority() const {
+  return this->priority_;
+}
+
+uint8_t Task::getState() const {
+  return this->state_;
+}
+
+std::size_t Task::getStep() {
+  return this->taskStep_;
+}
+
+std::string Task::getName() const {
+  return this->name_;
+}
+
 void Task::setPriority(uint8_t priority) {
   if (priority > configMAX_PRIORITY) {
     std::cerr << "Chosen priority exceeds maximum allowed priority of " << configMAX_PRIORITY << "\n";
@@ -16,21 +32,19 @@ void Task::setState(uint8_t state) {
   this->state_ = state;
 }
 
-uint8_t Task::getPriority() const {
-  return this->priority_;
+void Task::incrementStep() {
+  taskStep_++;
 }
 
-uint8_t Task::getState() const {
-  return this->state_;
-}
-std::string Task::getName() const {
-  return this->name_;
-}
-
-std::size_t* Task::getStep() {
-  return &taskStep_;
+void* Task::getArgs() {
+  if (!args_) {
+    std::cerr << "Invalid task arguments pointer\n";
+  }
+  return args_;
 }
 
 void Task::executeTask() {
-  if (funcPtr_) funcPtr_(this); 
+  if (funcPtr_) {
+    funcPtr_(args_); 
+  }
 }

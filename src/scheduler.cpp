@@ -18,27 +18,30 @@ void Scheduler::initializeIdleTask() {
       while (true) {
         std::cout << "Idle task running...\n";
         break;  // for simulation purposes: don't actually loop forever (will need to change later to allow for interrupts)
-      }});
+      }}, nullptr);
 
       readyLists_[0].push_back(idleTask_);
     }
 }
 
 Task* Scheduler::getHighestPriorityTask() {
-  int priority = static_cast<int>(configMAX_PRIORITY) - 1;
+  int priority = static_cast<int>(configMAX_PRIORITY);
 
   for (priority; priority >= 0; --priority) {
     if (!readyLists_[priority].empty()) {
-      // return the first task in the highest priority ready list, then move it to the end of the list to allow for round-robin scheduling
-      Task* task = readyLists_[priority].front();
-      readyLists_[priority].erase(readyLists_[priority].begin()); 
-      readyLists_[priority].push_back(task); 
+      Task* task = readyLists_[priority].front(); // return the first task in the highest priority ready list
       task->setState(Task::RUNNING); 
       return task; 
     }
   }
-
   return idleTask_; // idleTask_ is returned if no ready tasks are available.
+}
+
+void Scheduler::moveToBack(Task* toMove, uint8_t priorityIdx) {
+  if (!readyLists_[priorityIdx].empty()) {
+    readyLists_[priorityIdx].erase(readyLists_[priorityIdx].begin()); 
+    readyLists_[priorityIdx].push_back(toMove);
+  }
 }
 
 void Scheduler::removeTask(Task* task) {
@@ -59,10 +62,15 @@ void Scheduler::run() {
 
   while (clock_.getTickCount() < configMAX_TICKS) {
     Task* next = this->getHighestPriorityTask();
+    
     if (next->getName() != "Idle") {
       next->executeTask();
-      if (*(next->getStep()) >= configNUM_TASK_STEPS) {
+      next->incrementStep();
+      if ((next->getStep()) >= configNUM_TASK_STEPS) {
         removeTask(next);
+      }
+      else {
+        moveToBack(next, next->getPriority()); // move task to the back of it's priority list to allow for round-robin scheduling
       }
     }
     else {
@@ -70,4 +78,5 @@ void Scheduler::run() {
     }
     clock_.tick();
   }
+  std::cout << "MAXIMUM NUMBER OF CLOCK TICKS REACHED.\n";
 }
