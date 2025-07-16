@@ -2,6 +2,7 @@
 #define TASK_H
 
 #include "common.h"
+#include "config.h"
 #include <cstdint>
 #include <string>
 
@@ -24,15 +25,15 @@ class Task {
     static constexpr uint8_t SUSPENDED = 3;
 
   private:
-    uint8_t priority_;             // ranges from 0 to configMAX_PRIORITY (see config.h)
-    uint8_t state_;                // blocked, running, ready or suspended
-    uint8_t* stackBase_;           // base of the stack 
-    uint8_t* stackPtr_;            // simulated stack pointer 
-    std::string name_;             // for debugging purposes
-    std::size_t taskStep_;         // step counter for this task
-    std::size_t stackSize_ = 256;  // size of stack allocated for this task (fixed 256 bytes)
-    taskFunction_t funcPtr_;       // task function that executes when given "cpu" time
-    void* args_;                   // arguments passed into the task function
+    uint8_t priority_;                          // ranges from 0 to configMAX_PRIORITY (see config.h)
+    uint8_t state_;                             // blocked, running, ready or suspended
+    uint8_t* stackBase_;                        // base of the stack 
+    uint8_t* stackPtr_;                         // simulated stack pointer 
+    std::string name_;                          // for debugging purposes
+    std::size_t taskStep_;                      // step counter for this task
+    std::size_t stackSize_ = configSTACK_SIZE;  // size of stack allocated for this task (see config.h)
+    taskFunction_t funcPtr_;                    // task function that executes when given "cpu" time
+    void* args_;                                // arguments passed into the task function
     
     friend class RTOS;
     friend class Scheduler;

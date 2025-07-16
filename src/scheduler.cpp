@@ -15,13 +15,11 @@ void Scheduler::initializeIdleTask() {
     uint8_t* stackPtr = stackBase + sizeof(idleStack);
 
     idleTask_ = new Task("Idle", 0, stackBase, stackPtr, [] (void*) {
-      while (true) {
-        std::cout << "Idle task running...\n";
-        break;  // for simulation purposes: don't actually loop forever (will need to change later to allow for interrupts)
-      }}, nullptr);
-
-      readyLists_[0].push_back(idleTask_);
-    }
+      std::cout << "Idle task running...\n";
+      }, nullptr);
+      
+    readyLists_[0].push_back(idleTask_);
+  }
 }
 
 Task* Scheduler::getHighestPriorityTask() {
