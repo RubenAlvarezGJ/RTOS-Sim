@@ -3,6 +3,9 @@
 #include <string>
 #include "task.h"
 #include "common.h"
+#include "output_control.h"
+
+static SuppressOutputSetter _suppressOutputtSetter; // Toggles the suppressIdleOutput flag to true
 
 void dummyFunction(void* args) {
     return;

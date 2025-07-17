@@ -1,6 +1,10 @@
 #include <catch2/catch_test_macros.hpp>
 #include "scheduler.h"
 #include "task.h"
+#include "config.h"
+#include "output_control.h"
+
+static SuppressOutputSetter _suppressOutputtSetter; // Toggles the suppressIdleOutput flag to true
 
 /*
   These are helper functions used throughout the test cases.
@@ -71,4 +75,5 @@ TEST_CASE("Scheduler runs higher priority task first") {
   scheduler.run();
 
   REQUIRE(log[0] == "Higher");
+  REQUIRE(log[0 + configNUM_TASK_STEPS] == "Lower");
 }
