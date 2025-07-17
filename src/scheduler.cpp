@@ -3,11 +3,6 @@
 #include <iostream>
 #include <algorithm>
 
-void Scheduler::addToReadyList(Task* task) {
-  uint8_t priority = task->getPriority();
-  readyLists_[priority].push_back(task);
-}
-
 void Scheduler::initializeIdleTask() {
   if (idleTask_ == nullptr) {
     static uint8_t idleStack[128];
@@ -22,24 +17,29 @@ void Scheduler::initializeIdleTask() {
   }
 }
 
-Task* Scheduler::getHighestPriorityTask() {
-  int priority = static_cast<int>(configMAX_PRIORITY);
-
-  for (priority; priority >= 0; --priority) {
-    if (!readyLists_[priority].empty()) {
-      Task* task = readyLists_[priority].front(); // return the first task in the highest priority ready list
-      task->setState(Task::RUNNING); 
-      return task; 
-    }
-  }
-  return idleTask_; // idleTask_ is returned if no ready tasks are available.
-}
-
 void Scheduler::moveToBack(Task* toMove, uint8_t priorityIdx) {
   if (!readyLists_[priorityIdx].empty()) {
     readyLists_[priorityIdx].erase(readyLists_[priorityIdx].begin()); 
     readyLists_[priorityIdx].push_back(toMove);
   }
+}
+
+Task* Scheduler::getHighestPriorityTask() {
+  int priority = static_cast<int>(configMAX_PRIORITY);
+
+  for (priority; priority >= 0; --priority) {
+    if (!readyLists_[priority].empty()) {
+      Task* task = readyLists_[priority].front();  // return the first task in the highest priority ready list
+      task->setState(Task::RUNNING);
+      return task;
+    }
+  }
+  return idleTask_;                                // idleTask_ is returned if no ready tasks are available
+}
+
+void Scheduler::addToReadyList(Task* task) {
+  uint8_t priority = task->getPriority();
+  readyLists_[priority].push_back(task);
 }
 
 void Scheduler::removeTask(Task* task) {
@@ -52,6 +52,7 @@ void Scheduler::removeTask(Task* task) {
   } 
   else {
     std::cerr << "Task Removal Failed: Task '" << task->getName() << "' not found in ready list.\n";
+    return;
   }
 }
 
@@ -68,7 +69,7 @@ void Scheduler::run() {
         removeTask(next);
       }
       else {
-        moveToBack(next, next->getPriority()); // move task to the back of it's priority list to allow for round-robin scheduling
+        moveToBack(next, next->getPriority()); // move current task to the back of it's priority list to allow for round-robin scheduling
       }
     }
     else {

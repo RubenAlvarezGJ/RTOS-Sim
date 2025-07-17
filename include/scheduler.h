@@ -20,8 +20,8 @@ class Scheduler {
     std::vector<Task*> readyLists_[configMAX_PRIORITY + 1];  // ready lists for each priortiy level
 
     void initializeIdleTask();
-    Task* getHighestPriorityTask();
     void moveToBack(Task* toMove, uint8_t priorityIdx);
+    Task* getHighestPriorityTask();
 };
 
 #endif

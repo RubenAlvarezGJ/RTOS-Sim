@@ -4,7 +4,7 @@
 
 /*
   These are helper functions used throughout the test cases.
-  They are passed into Task objects as function pointers.
+  They are passed into Task object constructors as function pointers.
 */
 void testFunction(void* args) {
   bool* returnVal = static_cast<bool*>(args);

@@ -21,6 +21,7 @@ std::string Task::getName() const {
 void Task::setPriority(uint8_t priority) {
   if (priority > configMAX_PRIORITY) {
     std::cerr << "Chosen priority exceeds maximum allowed priority of " << configMAX_PRIORITY << "\n";
+    return;
   }
   this->priority_ = priority;
 }
@@ -28,6 +29,7 @@ void Task::setPriority(uint8_t priority) {
 void Task::setState(uint8_t state) {
   if (state > 3) {
     std::cerr << "State must be BLOCKED (0), RUNNING (1), READY (2) or SUSPENDED (3)\n";
+    return;
   }
   this->state_ = state;
 }
@@ -44,7 +46,9 @@ void* Task::getArgs() {
 }
 
 void Task::executeTask() {
-  if (funcPtr_) {
-    funcPtr_(args_); 
+  if (!funcPtr_) {
+    std::cerr << "Invalid function pointer\n";
+    return;
   }
+  funcPtr_(args_); 
 }
