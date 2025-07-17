@@ -1,5 +1,7 @@
 #include "scheduler.h"
 #include "task.h"
+#include "config.h"
+#include "output_control.h"
 #include <iostream>
 #include <algorithm>
 
@@ -10,8 +12,10 @@ void Scheduler::initializeIdleTask() {
     uint8_t* stackPtr = stackBase + sizeof(idleStack);
 
     idleTask_ = new Task("Idle", 0, stackBase, stackPtr, [] (void*) {
-      std::cout << "Idle task running...\n";
-      }, nullptr);
+      if (!suppressOutput) {
+        std::cout << "Idle task running...\n";
+      }
+    }, nullptr);
       
     readyLists_[0].push_back(idleTask_);
   }
@@ -51,7 +55,9 @@ void Scheduler::removeTask(Task* task) {
     readyList.erase(rlTask);
   } 
   else {
-    std::cerr << "Task Removal Failed: Task '" << task->getName() << "' not found in ready list.\n";
+    if (!suppressOutput) {
+      std::cerr << "Task Removal Failed: Task '" << task->getName() << "' not found in ready list.\n";
+    }
     return;
   }
 }
@@ -77,5 +83,8 @@ void Scheduler::run() {
     }
     clock_.tick();
   }
-  std::cout << "MAXIMUM NUMBER OF CLOCK TICKS REACHED.\n";
+
+  if (!suppressOutput) {
+    std::cout << "MAXIMUM NUMBER OF CLOCK TICKS REACHED.\n";
+  }
 }

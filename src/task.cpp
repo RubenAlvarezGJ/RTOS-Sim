@@ -1,5 +1,6 @@
 #include "task.h"
 #include "config.h"
+#include "output_control.h"
 #include <iostream>
 
 uint8_t Task::getPriority() const {
@@ -20,7 +21,9 @@ std::string Task::getName() const {
 
 void Task::setPriority(uint8_t priority) {
   if (priority > configMAX_PRIORITY) {
-    std::cerr << "Chosen priority exceeds maximum allowed priority of " << configMAX_PRIORITY << "\n";
+    if (!suppressOutput) {
+      std::cerr << "Chosen priority exceeds maximum allowed priority of " << configMAX_PRIORITY << "\n";
+    }
     return;
   }
   this->priority_ = priority;
@@ -28,7 +31,9 @@ void Task::setPriority(uint8_t priority) {
 
 void Task::setState(uint8_t state) {
   if (state > 3) {
-    std::cerr << "State must be BLOCKED (0), RUNNING (1), READY (2) or SUSPENDED (3)\n";
+    if (!suppressOutput) {
+      std::cerr << "State must be BLOCKED (0), RUNNING (1), READY (2) or SUSPENDED (3)\n";
+    }
     return;
   }
   this->state_ = state;
@@ -39,7 +44,7 @@ void Task::incrementStep() {
 }
 
 void* Task::getArgs() {
-  if (!args_) {
+  if (!args_ && !suppressOutput) {
     std::cerr << "Invalid task arguments pointer\n";
   }
   return args_;
@@ -47,7 +52,9 @@ void* Task::getArgs() {
 
 void Task::executeTask() {
   if (!funcPtr_) {
-    std::cerr << "Invalid function pointer\n";
+    if (!suppressOutput)  {
+      std::cerr << "Invalid function pointer\n";
+    }
     return;
   }
   funcPtr_(args_); 

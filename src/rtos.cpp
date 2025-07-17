@@ -2,10 +2,13 @@
 #include "task.h"
 #include "scheduler.h"
 #include "context.h"
+#include "output_control.h"
 
 RTOS::RTOS(size_t memorySize) : memorySize_(memorySize), nextFree_(0) {
   if (memorySize_ > configMAX_RAM_SIZE) {
-    std::cerr << "Requested memory size exceeds maximum, using max allowed instead: " << configMAX_RAM_SIZE << "\n";
+    if (!suppressOutput) {
+      std::cerr << "Requested memory size exceeds maximum, using max allowed instead: " << configMAX_RAM_SIZE << "\n";
+    }
     memorySize_ = configMAX_RAM_SIZE;
   }
   memoryPool_ = new uint8_t[memorySize_];
@@ -24,12 +27,16 @@ RTOS::~RTOS() {
 
 void RTOS::createTask(const std::string& name, uint8_t priority, taskFunction_t taskCode) {
   if ( (nextFree_ + configSTACK_SIZE) > memorySize_) {
-    std::cerr << "TASK CREATION FAILED: Insufficient memory available to create '" << name << "'\n";
+    if (!suppressOutput) {
+      std::cerr << "TASK CREATION FAILED: Insufficient memory available to create '" << name << "'\n";
+    }
     return;
   }
 
   if ( (priority < 0) || (priority > configMAX_PRIORITY) ) {
-    std::cerr << "TASK CREATION FAILED: Priority level of " << name << " must be between 0 and " << configMAX_PRIORITY << " (set to " << static_cast<int>(priority) << ") \n";
+    if (!suppressOutput) {
+      std::cerr << "TASK CREATION FAILED: Priority level of " << name << " must be between 0 and " << configMAX_PRIORITY << " (set to " << static_cast<int>(priority) << ") \n";
+    }
     return;
   }
 
