@@ -3,6 +3,12 @@
 
 #include <cstdint>
 
+/**
+ * @class Clock
+ * @brief Simulates a system tick counter for the RTOS.
+ * 
+ * Used to control how long the RTOS runs and to simulate the passage of time.
+ */
 class Clock {
   public:
     Clock() = default;
