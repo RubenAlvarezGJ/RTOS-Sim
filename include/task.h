@@ -9,8 +9,25 @@
 class Scheduler;
 class RTOS;
 
+/**
+ * @class Task
+ * @brief Represents a simulated task in the RTOS.
+ * 
+ * Each task has a name, priority, execution context (only for simulation purposes), stack, and a function to execute.
+ * This class is used and managed by the RTOS and Scheduler.
+ */
 class Task {
   public:
+    /**
+     * @brief Constructs a new Task object.
+     * 
+     * @param name Task name.
+     * @param priority Priority level (0 = lowest, configMAX_PRIORITY = highest).
+     * @param stackBase Pointer to the base of the task's simulated stack.
+     * @param stackPtr Initial stack pointer (top of stack).
+     * @param taskCode Pointer to the function this task should execute.
+     * @param args Optional arguments passed to the task function.
+     */
     Task(const std::string& name, uint8_t priority, uint8_t* stackBase, uint8_t* stackPtr, taskFunction_t taskCode, void* args)
         : name_(name), priority_(priority), stackBase_(stackBase), stackPtr_(stackPtr), funcPtr_(taskCode), args_(args),
           state_(READY), taskStep_(0) {}
@@ -19,10 +36,21 @@ class Task {
     std::size_t getStep();
     std::string getName() const;
     
+    // Task states
     static constexpr uint8_t BLOCKED   = 0;
     static constexpr uint8_t RUNNING   = 1;
     static constexpr uint8_t READY     = 2;
     static constexpr uint8_t SUSPENDED = 3;
+
+  private:
+    friend class RTOS;
+    friend class Scheduler;
+
+    void setPriority(uint8_t priority);
+    void setState(uint8_t state); 
+    void incrementStep();                       // increments the interal step count of this task
+    void* getArgs();
+    void executeTask();                         // executes the function pointed to by funcPtr_
 
   private:
     uint8_t priority_;                          // ranges from 0 to configMAX_PRIORITY (see config.h)
@@ -34,15 +62,6 @@ class Task {
     std::size_t stackSize_ = configSTACK_SIZE;  // size of stack allocated for this task (see config.h)
     taskFunction_t funcPtr_;                    // task function that executes when given "cpu" time
     void* args_;                                // arguments passed into the task function
-    
-    friend class RTOS;
-    friend class Scheduler;
-
-    void setPriority(uint8_t priority);
-    void setState(uint8_t state); 
-    void incrementStep();
-    void* getArgs();
-    void executeTask();
 };
 
 #endif
