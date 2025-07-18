@@ -22,7 +22,7 @@ void createDynamic(void* args) {
 }
 
 int main() {
-    bool standard = true;
+  bool standard = true;
 
   if (standard) {
     RTOS rtos1(5000); 
