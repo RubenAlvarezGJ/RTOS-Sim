@@ -73,16 +73,16 @@ void Scheduler::run() {
   isRunning_ = true;
 
   while (clock_.getTickCount() < configMAX_TICKS) {
-    Task* next = this->getHighestPriorityTask();
+    Task* task = this->getHighestPriorityTask();
     
-    if (next->getName() != "Idle") {
-      next->executeTask();
-      next->incrementStep();
-      if ((next->getStep()) >= configNUM_TASK_STEPS) {
-        removeTask(next);
+    if (task->getName() != "Idle") {
+      task->executeTask();
+      task->incrementStep();
+      if ((task->getStep()) >= configNUM_TASK_STEPS) {
+        removeTask(task);
       }
       else {
-        moveToBack(next, next->getPriority()); // move current task to the back of it's priority list to allow for round-robin scheduling
+        moveToBack(task, task->getPriority()); // move current task to the back of it's priority list to allow for round-robin scheduling
       }
     }
     else {
