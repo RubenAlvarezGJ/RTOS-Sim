@@ -64,8 +64,13 @@ void Scheduler::removeTask(Task* task) {
   }
 }
 
+bool Scheduler::isRunning() {
+  return this->isRunning_;
+}
+
 void Scheduler::run() {
   initializeIdleTask();
+  isRunning_ = true;
 
   while (clock_.getTickCount() < configMAX_TICKS) {
     Task* next = this->getHighestPriorityTask();

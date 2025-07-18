@@ -56,5 +56,11 @@ void RTOS::createTask(const std::string& name, uint8_t priority, taskFunction_t 
 }
 
 void RTOS::startScheduler() {
+  if (scheduler_->isRunning()) {
+    if (!suppressOutput) {
+      std::cerr << "SCHEDULER ERROR: Scheduler is already running.\n";
+    }
+    return;
+  }
   scheduler_->run();
 }

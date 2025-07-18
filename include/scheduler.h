@@ -13,9 +13,11 @@ class Scheduler {
     ~Scheduler();
     void addToReadyList(Task* task);
     void removeTask(Task* task);
+    bool isRunning();
     void run();
     
   private:
+    bool isRunning_ = false;
     Task* idleTask_ = nullptr;                               // idle tasks that executes when no other tasks available
     Clock clock_;                                            // clock to simulate ticks
     std::vector<Task*> readyLists_[configMAX_PRIORITY + 1];  // ready lists for each priortiy level
