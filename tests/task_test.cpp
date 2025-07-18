@@ -1,11 +1,11 @@
 #include <catch2/catch_test_macros.hpp>
 #include <cstdint>
-#include <string>
 #include "task.h"
 #include "common.h"
 #include "output_control.h"
 
-static SuppressOutputSetter _suppressOutputtSetter; // Toggles the suppressIdleOutput flag to true
+// Toggles the suppressOutput flag to true (see output_control.h if interested)
+static SuppressOutputSetter _suppressOutputtSetter; 
 
 void dummyFunction(void* args) {
     return;
