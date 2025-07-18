@@ -10,6 +10,7 @@ class Task;
 class Scheduler {
   public:
     Scheduler() = default;
+    ~Scheduler();
     void addToReadyList(Task* task);
     void removeTask(Task* task);
     void run();

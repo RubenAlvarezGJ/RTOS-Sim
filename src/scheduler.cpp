@@ -5,6 +5,8 @@
 #include <iostream>
 #include <algorithm>
 
+Scheduler::~Scheduler() {delete idleTask_;}
+
 void Scheduler::initializeIdleTask() {
   if (idleTask_ == nullptr) {
     static uint8_t idleStack[128];
