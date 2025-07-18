@@ -41,6 +41,8 @@ TEST_CASE("Function executes correct number of times") {
   for (int i = 0; i < configNUM_TASK_STEPS; ++i) {
     REQUIRE(log[i] == "task");
   }
+
+  REQUIRE(log.size() == configNUM_TASK_STEPS);
 }
 
 TEST_CASE("Function executes higher priority task first") {
