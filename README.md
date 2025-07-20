@@ -1,6 +1,6 @@
 # RTOS-Simulator
 
-A lightweight Real-Time Operating System (RTOS) kernel simulator written in C++, loosely inspired by the FreeRTOS Kernel.  
+A lightweight Real-Time Operating System (RTOS) kernel simulator written in C++, loosely inspired by the FreeRTOS Kernel.
 This project simulates core RTOS concepts like task creation, preemptive priority-based scheduling, round-robin execution, and dynamic task management.
 
 ## Key Features
