@@ -45,7 +45,7 @@ A simulated thread-like object. Contains:
     ```
 
 3. **Task Execution**  
-Tasks are executed for a number of steps. Each tick may result in task switching, either due to preemption or round-robin rotation.  
+Tasks are executed for a number of steps. Each tick may result in task switching, either due to preemption or round-robin rotation.
 When a task completes all of its steps, it is removed from the ready queue, marking its completion.
 
 4. **Task Function Structure**  
