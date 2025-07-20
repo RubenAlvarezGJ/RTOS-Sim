@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <cstdint>
+#include <cstddef>
 
 constexpr std::size_t configSTACK_SIZE = 256;      // 256 byte stack by default, change at your own risk
 constexpr std::size_t configMAX_RAM_SIZE = 16382;  // maximum allowed simulated RAM size (16 KB), change at your own risk
