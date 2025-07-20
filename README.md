@@ -1,48 +1,52 @@
 # RTOS-Simulator
 
-This is a RTOS (Real-Time Operating System) kernel simulator written in C++ loosely inspired by the FreeRTOS Kernel. I wanted to learn how real-time operating systems differed from traditional operating systems so I decided to write a lightweight kernel simulator that mainly focuses on task-creation, scheduling, and memory management within a simulated environment. 
+A lightweight Real-Time Operating System (RTOS) kernel simulator written in C++, loosely inspired by the FreeRTOS Kernel.  
+This project simulates core RTOS concepts like task creation, preemptive priority-based scheduling, round-robin execution, and dynamic task management.
 
 ## Key Features
-- **Custom Task Objects**: Task objects represent a simulated task in the rtos and are associated with a priority, state, step counter, and code to execute.
+- **Custom Task Objects**: Each task has its own name, priority, state (READY, RUNNING, BLOCKED, SUSPENDED), step counter, and logic function.
+- **Preemptive Priority-Based Scheduling**: Higher-priority tasks preempt lower ones.
+- **Round-Robin Scheduling**: Equal-priority tasks share simulated CPU time in a rotating fashion.
+- **Simulated Memory Pool**: Each task gets a simulated stack allocated from a memory pool.
+- **Dynamic Task Creation**: Tasks can create new tasks at runtime from within their own logic.
 
-- **Preempitive Priority-Based Scheduling**: Tasks are managed in ready queues organized by priority level. Higher priority tasks preempt lower priority ones.
-
-- **Round-Robin Scheduling**: For tasks with equal priority, simulated CPU time is divided equally in round-robin fashion.
-
-- **Memory Pool**: Used to simulate memory management and task specific stack allocation.
-
-- **Task Lifecycle Management**: Tasks progress through simulated steps. When a task completes all steps, it is removed from its ready queue marking its completion.
+---
 
 ## Architecture Overview
 
 ### `RTOS`  
-This is the main API interface. Used by the user to create tasks and start the scheduler.
+Main API interface. Provides methods to create tasks and start the scheduler.
 
-### `Scheduler`  
-Handles task scheduling and execution:
-- Organizes tasks into multiple priority queues
-- Uses fixed-priority preemptive scheduling
-- Implements round-robin for equal-priority tasks
+### `Scheduler`
+Manages ready lists and selects which task to run. Implements:
+- Fixed-priority preemptive scheduling
+- Round-robin for equal-priority tasks
+- Idle task fallback
 
-### `Task`  
-Includes:
+### `Task`
+A simulated thread-like object. Contains:
 - Task name and priority
-- Step count for simulation
-- Status (BLOCKED, READY, RUNNING, SUSPENDED)
-- A function pointer to the task logic
+- Step count to simulate task progression
+- State
+- Function pointer to simulate user-defined task logic
+
+---
 
 ## How It Works
 
 1. **Task Creation**  
     ```cpp
     rtos.createTask("TaskA", 3, exampleTask); // This creates a task of priority 3 and adds it to the ready queue.
+    ```
 
 2. **Scheduler Invocation**
     ```cpp
-    rtos.startScheduler(); // This starts the scheduler and begins executing tasks based on priority level.
+    rtos.startScheduler(); // Begins task execution. The highest-priority READY task is selected at every tick.
+    ```
 
 3. **Task Execution**  
-Tasks are executed for a number of steps. Each tick may result in task switching, either due to preemption or round-robin rotation.
+Tasks are executed for a number of steps. Each tick may result in task switching, either due to preemption or round-robin rotation.  
+When a task completes all of its steps, it is removed from the ready queue, marking its completion.
 
 4. **Task Function Structure**  
 All task functions follow this format for the purpose of simulation:
@@ -63,17 +67,21 @@ All task functions follow this format for the purpose of simulation:
             ctx->rtos->createTask("DynamicallyCreatedTask", 3, exampleTask);
         }
     }
+    ```
+
+---
 
 ## Testing
-I used the testing framework [Catch2](https://github.com/catchorg/Catch2). To run the test suite, build the project and run the **tests** executable.
+I used the testing framework [**Catch2**](https://github.com/catchorg/Catch2). To run the test suite, build the project and run the **tests** executable.
 
+---
 
 ## Build Instructions
 
 ### Prerequisites
 
 - CMake 3.11 or higher
-- A C++17-compatible compiler (e.g. clang++, g++, MSVC(for windows))
+- A C++17-compatible compiler (e.g. clang++, g++, MSVC (for Windows))
 - Git
 
 ### Build Steps
@@ -82,7 +90,7 @@ I used the testing framework [Catch2](https://github.com/catchorg/Catch2). To ru
 ```
 git clone https://github.com/RubenAlvarezGJ/RTOS-Sim.git
 ```
-- Nagivate to the project directory with:
+- Navigate to the project directory with:
 ```
 cd RTOS-Sim
 ```
