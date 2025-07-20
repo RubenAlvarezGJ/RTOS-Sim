@@ -3,6 +3,6 @@ mkdir -p build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build .
-echo -e "\n Build complete."
-echo "Run simulator with: ./rtos_kernel_sim"
-echo "Run tests with:     ./tests"
+echo -e "\nBuild complete."
+echo "Run simulator with: ./build/rtos_kernel_sim"
+echo "Run tests with:     ./build/tests"
