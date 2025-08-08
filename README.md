@@ -5,7 +5,7 @@ This project simulates core RTOS concepts like task creation, preemptive priorit
 
 ## Key Features
 - **Custom Task Objects**: Each task has its own name, priority, state (READY, RUNNING, BLOCKED, SUSPENDED), step counter, and logic function.
-- **Preemptive Priority-Based Scheduling**: Higher-priority tasks preempt lower ones.
+- **Preemptive Priority-Based Scheduling**: Higher-priority tasks "preempt" lower ones.
 - **Round-Robin Scheduling**: Equal-priority tasks share simulated CPU time in a rotating fashion.
 - **Simulated Memory Pool**: Each task gets a simulated stack allocated from a memory pool.
 - **Dynamic Task Creation**: Tasks can create new tasks at runtime from within their own logic.
